@@ -1,12 +1,12 @@
 {
-  "educandu/educandu-plugin-example": {
+  "musikisum/educandu-plugin-embedded-html": {
     "name": {
-      "en": "Example plugin",
-      "de": "Beispiel-Plugin"
+      "en": "Embedded HTML plugin",
+      "de": "Eingebettetes-HTML-Plugin"
     },
     "label": {
-      "en": "Example label",
-      "de": "Beispiel-Label"
+      "en": "Embedded HTML label",
+      "de": "Eingebettetes-HTML-Label"
     },
     "currentServerTime": {
       "en": "Current server time",
