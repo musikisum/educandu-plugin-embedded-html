@@ -4,13 +4,29 @@
       "en": "Embedded HTML plugin",
       "de": "Eingebettetes-HTML-Plugin"
     },
-    "label": {
-      "en": "Embedded HTML label",
-      "de": "Eingebettetes-HTML-Label"
+    "htmlFile": {
+      "en": "HTML file",
+      "de": "HTML-Datei"
     },
-    "currentServerTime": {
-      "en": "Current server time",
-      "de": "Aktuelle Serverzeit"
+    "uploadHtml": {
+      "en": "Upload HTML file",
+      "de": "HTML-Datei hochladen"
+    },
+    "uploadFile": {
+      "en": "Upload",
+      "de": "Hochladen"
+    },
+    "sizeWarning": {
+      "en": "The total size of the uploaded files exceeds 1 MB. This may affect performance.",
+      "de": "Die Gesamtgröße der hochgeladenen Dateien überschreitet 1 MB. Das kann die Performance beeinträchtigen."
+    },
+    "height": {
+      "en": "Height",
+      "de": "Höhe"
+    },
+    "heightInfo": {
+      "en": "Display height of the iframe in pixels",
+      "de": "Anzeigehöhe des iframes in Pixeln"
     }
   }
 }

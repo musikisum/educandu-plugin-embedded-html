@@ -1,8 +1,20 @@
-.EP_Musikisum_EmbeddedHtml_Display {}
-
-.EP_Musikisum_EmbeddedHtml_Display-time {
-  font-style: italic;
-  margin-top: @edu-page-content-padding;
+.EP_Musikisum_EmbeddedHtml_Display {
+  iframe {
+    display: block;
+    width: 100%;
+    border: none;
+  }
 }
 
-.EP_Musikisum_EmbeddedHtml_Editor {}
+.EP_Musikisum_EmbeddedHtml_Editor {
+  &-uploadRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &-check {
+    font-size: 18px;
+    color: #52c41a;
+  }
+}

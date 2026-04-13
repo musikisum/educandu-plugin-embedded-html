@@ -1,76 +1,63 @@
-import { Form, Input } from 'antd';
-import { useTranslation } from 'react-i18next';
-import React, { useEffect, useState } from 'react';
-import Logger from '@educandu/educandu/common/logger.js';
-import Markdown from '@educandu/educandu/components/markdown.js';
-import HttpClient from '@educandu/educandu/api-clients/http-client.js';
-import { handleApiError } from '@educandu/educandu/ui/error-helper.js';
-import { useService } from '@educandu/educandu/components/container-context.js';
-import { useDateFormat } from '@educandu/educandu/components/locale-context.js';
+import React, { useEffect, useRef, useState } from 'react';
 import { sectionDisplayProps } from '@educandu/educandu/ui/default-prop-types.js';
 
-const POLL_INTERVAL_IN_MS = 5000;
+const RESIZE_SCRIPT = [
+  '<script>',
+  '(function(){',
+  '  function report(){',
+  '    window.parent.postMessage({iframeAutoResize:true,height:document.documentElement.scrollHeight},"*");',
+  '  }',
+  '  window.addEventListener("load",function(){requestAnimationFrame(report);});',
+  '  window.addEventListener("message",function(e){if(e.data&&e.data.iframeRequestHeight){requestAnimationFrame(report);}});',
+  '  if(typeof ResizeObserver!=="undefined"){new ResizeObserver(report).observe(document.body);}',
+  '})();',
+  '</script>'
+].join('');
 
-const logger = new Logger(import.meta.url);
-
-export default function EmbeddedHtmlDisplay({ content, input, canModifyInput, onInputChanged }) {
-  const { formatDate } = useDateFormat();
-  const httpClient = useService(HttpClient);
-  const [serverTime, setServerTime] = useState(null);
-  const { t } = useTranslation('musikisum/educandu-plugin-embedded-html');
-
-  const handleCurrentValueChange = event => {
-    onInputChanged({ value: event.target.value });
-  };
+export default function EmbeddedHtmlDisplay({ content }) {
+  const { html, css, js, width, height } = content;
+  const iframeRef = useRef(null);
+  const [autoHeight, setAutoHeight] = useState(null);
 
   useEffect(() => {
-    let nextTimeout = null;
+    const iframe = iframeRef.current;
 
-    const getUpdate = async () => {
-      try {
-        const response = await httpClient.get(
-          '/api/v1/plugin/musikisum/educandu-plugin-embedded-html/time',
-          { responseType: 'json' }
-        );
-
-        setServerTime(response.data.time);
-        nextTimeout = setTimeout(getUpdate, POLL_INTERVAL_IN_MS);
-      } catch (error) {
-        handleApiError({ error, logger, t });
+    const handleMessage = event => {
+      if (event.source === iframe?.contentWindow && event.data?.iframeAutoResize) {
+        setAutoHeight(event.data.height);
       }
     };
+    window.addEventListener('message', handleMessage);
 
-    nextTimeout = setTimeout(getUpdate, 0);
+    const requestHeight = () => {
+      iframe?.contentWindow?.postMessage({ iframeRequestHeight: true }, '*');
+    };
+
+    // Immediately request height in case the iframe already loaded before this effect ran (SSR)
+    requestHeight();
+    iframe?.addEventListener('load', requestHeight);
 
     return () => {
-      if (nextTimeout) {
-        clearTimeout(nextTimeout);
-      }
+      window.removeEventListener('message', handleMessage);
+      iframe?.removeEventListener('load', requestHeight);
     };
-  }, [httpClient, t]);
+  }, []);
+
+  useEffect(() => {
+    setAutoHeight(null);
+  }, [html, css, js]);
+
+  const srcDoc = `<!DOCTYPE html><html><head><style>${css}</style></head><body>${html}<script>${js}</script>${RESIZE_SCRIPT}</body></html>`;
 
   return (
     <div className="EP_Musikisum_EmbeddedHtml_Display">
-      <div className={`u-horizontally-centered u-width-${content.width}`}>
-        <Markdown renderAnchors>
-          {content.text}
-        </Markdown>
-        <Form layout="vertical">
-          <Form.Item label={t('label')}>
-            <Input
-              value={input.data?.value || ''}
-              maxLength={100}
-              disabled={!canModifyInput}
-              readOnly={!canModifyInput}
-              onChange={handleCurrentValueChange}
-              />
-          </Form.Item>
-        </Form>
-        {!!serverTime && (
-          <div className="EP_Musikisum_EmbeddedHtml_Display-time">
-            {t('currentServerTime')}: {formatDate(serverTime)}
-          </div>
-        )}
+      <div className={`u-horizontally-centered u-width-${width}`}>
+        <iframe
+          ref={iframeRef}
+          sandbox="allow-scripts"
+          srcDoc={srcDoc}
+          style={{ height: `${autoHeight ?? height}px` }}
+          />
       </div>
     </div>
   );

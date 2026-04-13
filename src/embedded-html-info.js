@@ -1,28 +1,23 @@
 import joi from 'joi';
 import React from 'react';
-import { ClockCircleOutlined } from '@ant-design/icons';
+import { CodeOutlined } from '@ant-design/icons';
 import cloneDeep from '@educandu/educandu/utils/clone-deep.js';
 import { PLUGIN_GROUP } from '@educandu/educandu/domain/constants.js';
 import { couldAccessUrlFromRoom } from '@educandu/educandu/utils/source-utils.js';
-import GithubFlavoredMarkdown from '@educandu/educandu/common/github-flavored-markdown.js';
+
+const CDN_URL_REGEX = /cdn:\/\/[^\s"'>]+/g;
 
 class EmbeddedHtmlInfo {
-  static dependencies = [GithubFlavoredMarkdown];
-
   static typeName = 'musikisum/educandu-plugin-embedded-html';
 
-  allowsInput = true;
-
-  constructor(gfm) {
-    this.gfm = gfm;
-  }
+  allowsInput = false;
 
   getDisplayName(t) {
     return t('musikisum/educandu-plugin-embedded-html:name');
   }
 
   getIcon() {
-    return <ClockCircleOutlined />;
+    return <CodeOutlined />;
   }
 
   getGroups() {
@@ -39,15 +34,21 @@ class EmbeddedHtmlInfo {
 
   getDefaultContent() {
     return {
-      text: '',
-      width: 100
+      html: '',
+      css: '',
+      js: '',
+      width: 100,
+      height: 600
     };
   }
 
   validateContent(content) {
     const schema = joi.object({
-      text: joi.string().allow('').required(),
-      width: joi.number().min(0).max(100).required()
+      html: joi.string().allow('').required(),
+      css: joi.string().allow('').required(),
+      js: joi.string().allow('').required(),
+      width: joi.number().min(0).max(100).required(),
+      height: joi.number().min(50).required()
     });
 
     joi.attempt(content, schema, { abortEarly: false, convert: false, noDefaults: true });
@@ -60,16 +61,21 @@ class EmbeddedHtmlInfo {
   redactContent(content, targetRoomId) {
     const redactedContent = cloneDeep(content);
 
-    redactedContent.text = this.gfm.redactCdnResources(
-      redactedContent.text,
-      url => couldAccessUrlFromRoom(url, targetRoomId) ? url : ''
+    const redact = text => text.replace(CDN_URL_REGEX, url =>
+      couldAccessUrlFromRoom(url, targetRoomId) ? url : ''
     );
+
+    redactedContent.html = redact(redactedContent.html);
+    redactedContent.css = redact(redactedContent.css);
 
     return redactedContent;
   }
 
   getCdnResources(content) {
-    return this.gfm.extractCdnResources(content.text);
+    return [
+      ...(content.html.match(CDN_URL_REGEX) || []),
+      ...(content.css.match(CDN_URL_REGEX) || [])
+    ];
   }
 }
 
