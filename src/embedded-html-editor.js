@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Alert, Button, Form, InputNumber, Upload } from 'antd';
-import { CheckCircleOutlined, UploadOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
+import { Alert, Button, Collapse, Form, Input, InputNumber, Tabs, Upload } from 'antd';
+import { CheckCircleOutlined, CodeOutlined, UploadOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import Info from '@educandu/educandu/components/info.js';
 import { FORM_ITEM_LAYOUT } from '@educandu/educandu/domain/constants.js';
@@ -29,124 +29,120 @@ function stripLocalExternalTags(html) {
     .replace(/<script[^>]+src=["'](?!https?:|\/\/|cdn:\/\/)([^"']+)["'][^>]*><\/script>\s*/gi, '');
 }
 
-function findLocalRefs(html) {
-  const cssRefs = [];
-  const jsRefs = [];
-  const linkRegex = /<link[^>]+href=["']([^"']+)["'][^>]*>/gi;
-  const scriptRegex = /<script[^>]+src=["']([^"']+)["'][^>]*>/gi;
-  let m;
-  while ((m = linkRegex.exec(html)) !== null) {
-    if (!m[1].match(/^(https?:|\/\/|cdn:\/\/)/)) {
-      cssRefs.push(m[1].split('/').pop());
-    }
-  }
-  while ((m = scriptRegex.exec(html)) !== null) {
-    if (!m[1].match(/^(https?:|\/\/|cdn:\/\/)/)) {
-      jsRefs.push(m[1].split('/').pop());
-    }
-  }
-  return { cssRefs, jsRefs };
+function hasScrollbarIssues(css) {
+  return /overflow(-[xy])?\s*:\s*(auto|scroll)/i.test(css);
+}
+
+function fixScrollbarIssues(css) {
+  return css.replace(/overflow(-[xy])?\s*:\s*(auto|scroll)/gi, (_, axis) => `overflow${axis || ''}: hidden`);
 }
 
 export default function EmbeddedHtmlEditor({ content, onContentChanged }) {
   const { t } = useTranslation('musikisum/educandu-plugin-embedded-html');
-  const [pendingCss, setPendingCss] = useState([]);
-  const [pendingJs, setPendingJs] = useState([]);
-  const [draftContent, setDraftContent] = useState(null);
+  const [previewSrcDoc, setPreviewSrcDoc] = useState(null);
+
+  useEffect(() => {
+    if (!content.html && !content.css) {
+      return () => {};
+    }
+    const timer = setTimeout(() => {
+      setPreviewSrcDoc(
+        `<!DOCTYPE html><html><head><style>html,body{overflow:hidden;}${content.css}</style></head><body>${content.html}<script>${content.js}</script></body></html>`
+      );
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [content.html, content.css, content.js]);
 
   const totalSize = (content.html?.length || 0) + (content.css?.length || 0) + (content.js?.length || 0);
   const hasContent = !!content.html;
-  const isPending = pendingCss.length > 0 || pendingJs.length > 0;
 
   const handleHtmlUpload = async file => {
     const text = await readFileAsText(file);
     const body = extractBodyContent(text);
-    const { cssRefs, jsRefs } = findLocalRefs(text);
     const cleanedHtml = stripLocalExternalTags(body);
-    const next = { ...content, html: cleanedHtml, css: '', js: '' };
-
-    if (cssRefs.length === 0 && jsRefs.length === 0) {
-      onContentChanged(next);
-    } else {
-      setDraftContent(next);
-      setPendingCss(cssRefs);
-      setPendingJs(jsRefs);
-    }
+    onContentChanged({ ...content, html: cleanedHtml });
   };
 
-  const handleCssUpload = async (file, filename) => {
+  const handleCssUpload = async file => {
     const text = await readFileAsText(file);
-    const remaining = pendingCss.filter(f => f !== filename);
-    const next = { ...draftContent, css: draftContent.css + text };
-    if (remaining.length === 0 && pendingJs.length === 0) {
-      onContentChanged(next);
-      setDraftContent(null);
-      setPendingCss([]);
-    } else {
-      setDraftContent(next);
-      setPendingCss(remaining);
-    }
+    onContentChanged({ ...content, css: text, cssOriginal: null });
   };
 
-  const handleJsUpload = async (file, filename) => {
+  const handleJsUpload = async file => {
     const text = await readFileAsText(file);
-    const remaining = pendingJs.filter(f => f !== filename);
-    const next = { ...draftContent, js: draftContent.js + text };
-    if (remaining.length === 0 && pendingCss.length === 0) {
-      onContentChanged(next);
-      setDraftContent(null);
-      setPendingJs([]);
-    } else {
-      setDraftContent(next);
-      setPendingJs(remaining);
-    }
+    onContentChanged({ ...content, js: text });
   };
 
+  const handleFixScrollbars = () => {
+    onContentChanged({ ...content, cssOriginal: content.css, css: fixScrollbarIssues(content.css) });
+  };
+
+  const handleUndoScrollbarFix = () => {
+    onContentChanged({ ...content, css: content.cssOriginal, cssOriginal: null });
+  };
+
+  const handleHtmlChange = e => onContentChanged({ ...content, html: e.target.value });
+  const handleCssChange = e => onContentChanged({ ...content, css: e.target.value, cssOriginal: null });
+  const handleJsChange = e => onContentChanged({ ...content, js: e.target.value });
   const handleWidthChange = value => onContentChanged({ ...content, width: value });
   const handleHeightChange = value => onContentChanged({ ...content, height: value });
+
+  const showScrollbarWarning = !!content.css && !content.cssOriginal && hasScrollbarIssues(content.css);
 
   return (
     <div className="EP_Musikisum_EmbeddedHtml_Editor">
       <Form labelAlign="left">
 
-        <Form.Item label={t('htmlFile')} {...FORM_ITEM_LAYOUT}>
+        <Form.Item label={t('uploads')} {...FORM_ITEM_LAYOUT}>
           <div className="EP_Musikisum_EmbeddedHtml_Editor-uploadRow">
             <Upload
               accept=".html,.htm"
               showUploadList={false}
               beforeUpload={file => { handleHtmlUpload(file); return false; }}
             >
-              <Button icon={<UploadOutlined />}>{t('uploadHtml')}</Button>
+              <Button icon={<UploadOutlined />}>HTML</Button>
             </Upload>
-            {hasContent && !isPending && (
+            <Upload
+              accept=".css"
+              showUploadList={false}
+              beforeUpload={file => { handleCssUpload(file); return false; }}
+            >
+              <Button icon={<UploadOutlined />}>CSS</Button>
+            </Upload>
+            <Upload
+              accept=".js"
+              showUploadList={false}
+              beforeUpload={file => { handleJsUpload(file); return false; }}
+            >
+              <Button icon={<UploadOutlined />}>JS</Button>
+            </Upload>
+            {hasContent && (
               <CheckCircleOutlined className="EP_Musikisum_EmbeddedHtml_Editor-check" />
             )}
           </div>
         </Form.Item>
 
-        {pendingCss.map(filename => (
-          <Form.Item key={filename} label={`CSS: ${filename}`} {...FORM_ITEM_LAYOUT}>
-            <Upload
-              accept=".css"
-              showUploadList={false}
-              beforeUpload={file => { handleCssUpload(file, filename); return false; }}
-            >
-              <Button icon={<UploadOutlined />}>{t('uploadFile')}</Button>
-            </Upload>
+        {showScrollbarWarning && (
+          <Form.Item {...FORM_ITEM_LAYOUT}>
+            <Alert
+              type="warning"
+              showIcon
+              message={t('scrollbarWarning')}
+              action={<Button size="small" onClick={handleFixScrollbars}>{t('scrollbarFix')}</Button>}
+              />
           </Form.Item>
-        ))}
+        )}
 
-        {pendingJs.map(filename => (
-          <Form.Item key={filename} label={`JS: ${filename}`} {...FORM_ITEM_LAYOUT}>
-            <Upload
-              accept=".js"
-              showUploadList={false}
-              beforeUpload={file => { handleJsUpload(file, filename); return false; }}
-            >
-              <Button icon={<UploadOutlined />}>{t('uploadFile')}</Button>
-            </Upload>
+        {!!content.cssOriginal && (
+          <Form.Item {...FORM_ITEM_LAYOUT}>
+            <Alert
+              type="info"
+              showIcon
+              message={t('scrollbarFixed')}
+              action={<Button size="small" onClick={handleUndoScrollbarFix}>{t('scrollbarUndo')}</Button>}
+              />
           </Form.Item>
-        ))}
+        )}
 
         {totalSize > SIZE_WARNING_BYTES && (
           <Form.Item {...FORM_ITEM_LAYOUT}>
@@ -171,6 +167,70 @@ export default function EmbeddedHtmlEditor({ content, onContentChanged }) {
             onChange={handleHeightChange}
             addonAfter="px"
           />
+        </Form.Item>
+
+        <Form.Item>
+          <Collapse
+            ghost
+            items={[{
+              key: 'source',
+              label: <span><CodeOutlined /> {t('sourceCode')}</span>,
+              children: (
+                <div className="EP_Musikisum_EmbeddedHtml_Editor-sourcePanel">
+                  <Tabs
+                    className="EP_Musikisum_EmbeddedHtml_Editor-codeTabs"
+                    items={[
+                      {
+                        key: 'html',
+                        label: 'HTML',
+                        children: (
+                          <Input.TextArea
+                            value={content.html}
+                            onChange={handleHtmlChange}
+                            autoSize={{ minRows: 8, maxRows: 20 }}
+                            className="EP_Musikisum_EmbeddedHtml_Editor-codeArea"
+                            />
+                        )
+                      },
+                      {
+                        key: 'css',
+                        label: 'CSS',
+                        children: (
+                          <Input.TextArea
+                            value={content.css}
+                            onChange={handleCssChange}
+                            autoSize={{ minRows: 8, maxRows: 20 }}
+                            className="EP_Musikisum_EmbeddedHtml_Editor-codeArea"
+                            />
+                        )
+                      },
+                      {
+                        key: 'js',
+                        label: 'JS',
+                        children: (
+                          <Input.TextArea
+                            value={content.js}
+                            onChange={handleJsChange}
+                            autoSize={{ minRows: 8, maxRows: 20 }}
+                            className="EP_Musikisum_EmbeddedHtml_Editor-codeArea"
+                            />
+                        )
+                      }
+                    ]}
+                    />
+                  {!!previewSrcDoc && (
+                    <div className="EP_Musikisum_EmbeddedHtml_Editor-previewWrapper">
+                      <iframe
+                        sandbox="allow-scripts"
+                        srcDoc={previewSrcDoc}
+                        className="EP_Musikisum_EmbeddedHtml_Editor-previewIframe"
+                        />
+                    </div>
+                  )}
+                </div>
+              )
+            }]}
+            />
         </Form.Item>
 
       </Form>

@@ -36,6 +36,7 @@ class EmbeddedHtmlInfo {
     return {
       html: '',
       css: '',
+      cssOriginal: null,
       js: '',
       width: 100,
       height: 600
@@ -46,6 +47,7 @@ class EmbeddedHtmlInfo {
     const schema = joi.object({
       html: joi.string().allow('').required(),
       css: joi.string().allow('').required(),
+      cssOriginal: joi.string().allow(null).required(),
       js: joi.string().allow('').required(),
       width: joi.number().min(0).max(100).required(),
       height: joi.number().min(50).required()

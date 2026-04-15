@@ -4,21 +4,33 @@
       "en": "Embedded HTML plugin",
       "de": "Eingebettetes-HTML-Plugin"
     },
-    "htmlFile": {
-      "en": "HTML file",
-      "de": "HTML-Datei"
+    "uploads": {
+      "en": "Uploads",
+      "de": "Uploads"
     },
-    "uploadHtml": {
-      "en": "Upload HTML file",
-      "de": "HTML-Datei hochladen"
+    "scrollbarWarning": {
+      "en": "The CSS contains overflow: auto or overflow: scroll, which may cause scrollbars inside the content.",
+      "de": "Die CSS enthält overflow: auto oder overflow: scroll, was zu Scrollbalken im Inhalt führen kann."
     },
-    "uploadFile": {
-      "en": "Upload",
-      "de": "Hochladen"
+    "scrollbarFix": {
+      "en": "Fix automatically",
+      "de": "Automatisch beheben"
+    },
+    "scrollbarFixed": {
+      "en": "Scrollbar fix applied. The original CSS is preserved.",
+      "de": "Scrollbalken-Fix angewendet. Die ursprüngliche CSS bleibt erhalten."
+    },
+    "scrollbarUndo": {
+      "en": "Undo",
+      "de": "Rückgängig"
     },
     "sizeWarning": {
       "en": "The total size of the uploaded files exceeds 1 MB. This may affect performance.",
       "de": "Die Gesamtgröße der hochgeladenen Dateien überschreitet 1 MB. Das kann die Performance beeinträchtigen."
+    },
+    "sourceCode": {
+      "en": "View / edit source code",
+      "de": "Quellcode anzeigen / bearbeiten"
     },
     "height": {
       "en": "Height",

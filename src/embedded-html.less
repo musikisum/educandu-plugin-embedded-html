@@ -17,4 +17,41 @@
     font-size: 18px;
     color: #52c41a;
   }
+
+  &-codeArea {
+    width: 100%;
+    font-family: monospace;
+    font-size: 12px;
+  }
+
+  &-sourcePanel {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  &-codeTabs {
+    flex: 0 0 calc(50% - 8px);
+    min-width: 0;
+  }
+
+  &-previewWrapper {
+    flex: 0 0 calc(50% - 8px);
+    min-width: 0;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border: none;
+    border-radius: 6px;
+    background: #fff;
+    padding-top: 62px;
+  }
+
+  &-previewIframe {
+    display: block;
+    width: 200%;
+    height: 200%;
+    border: none;
+    transform: scale(0.5);
+    transform-origin: top left;
+  }
 }

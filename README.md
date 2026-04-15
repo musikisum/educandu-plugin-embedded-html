@@ -38,12 +38,11 @@ export default {
 };
 ~~~
 
-Add the plugin name, the translations and any additional controllers to your server config:
+Add the plugin name and the translations to your server config:
 
 ~~~ js
 import educandu from '@educandu/educandu';
 import { createRequire } from 'node:module';
-import EmbeddedHtmlController from '@musikisum/educandu-plugin-embedded-html/embedded-html-controller.js';
 
 const require = createRequire(import.meta.url);
 const embeddedHtmlPluginTranslationsPath = require.resolve('@musikisum/educandu-plugin-embedded-html/translations.json');
@@ -51,7 +50,6 @@ const embeddedHtmlPluginTranslationsPath = require.resolve('@musikisum/educandu-
 educandu({
   plugins: [/* your other plugins here */, 'musikisum/educandu-plugin-embedded-html'],
   resources: [/* your other translations here */, embeddedHtmlPluginTranslationsPath],
-  additionalControllers: [/* your other additional controllers here */, EmbeddedHtmlController],
   /* your other server config here */
 });
 ~~~
