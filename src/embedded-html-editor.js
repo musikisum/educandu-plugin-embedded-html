@@ -99,39 +99,39 @@ export default function EmbeddedHtmlEditor({ content, onContentChanged }) {
               accept=".html,.htm"
               showUploadList={false}
               beforeUpload={file => { handleHtmlUpload(file); return false; }}
-            >
+              >
               <Button icon={<UploadOutlined />}>HTML</Button>
             </Upload>
             <Upload
               accept=".css"
               showUploadList={false}
               beforeUpload={file => { handleCssUpload(file); return false; }}
-            >
+              >
               <Button icon={<UploadOutlined />}>CSS</Button>
             </Upload>
             <Upload
               accept=".js"
               showUploadList={false}
               beforeUpload={file => { handleJsUpload(file); return false; }}
-            >
+              >
               <Button icon={<UploadOutlined />}>JS</Button>
             </Upload>
-            {hasContent && (
-              <CheckCircleOutlined className="EP_Musikisum_EmbeddedHtml_Editor-check" />
-            )}
+            {hasContent ? <CheckCircleOutlined className="EP_Musikisum_EmbeddedHtml_Editor-check" /> : null}
           </div>
         </Form.Item>
 
-        {showScrollbarWarning && (
-          <Form.Item {...FORM_ITEM_LAYOUT}>
-            <Alert
-              type="warning"
-              showIcon
-              message={t('scrollbarWarning')}
-              action={<Button size="small" onClick={handleFixScrollbars}>{t('scrollbarFix')}</Button>}
-              />
-          </Form.Item>
-        )}
+        {showScrollbarWarning
+          ? (
+            <Form.Item {...FORM_ITEM_LAYOUT}>
+              <Alert
+                type="warning"
+                showIcon
+                message={t('scrollbarWarning')}
+                action={<Button size="small" onClick={handleFixScrollbars}>{t('scrollbarFix')}</Button>}
+                />
+            </Form.Item>
+          )
+          : null}
 
         {!!content.cssOriginal && (
           <Form.Item {...FORM_ITEM_LAYOUT}>
@@ -153,20 +153,20 @@ export default function EmbeddedHtmlEditor({ content, onContentChanged }) {
         <Form.Item
           label={<Info tooltip={t('common:widthInfo')}>{t('common:width')}</Info>}
           {...FORM_ITEM_LAYOUT}
-        >
+          >
           <ObjectWidthSlider value={content.width} onChange={handleWidthChange} />
         </Form.Item>
 
         <Form.Item
           label={<Info tooltip={t('heightInfo')}>{t('height')}</Info>}
           {...FORM_ITEM_LAYOUT}
-        >
+          >
           <InputNumber
             min={50}
             value={content.height}
             onChange={handleHeightChange}
             addonAfter="px"
-          />
+            />
         </Form.Item>
 
         <Form.Item>

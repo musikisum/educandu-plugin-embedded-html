@@ -75,8 +75,8 @@ class EmbeddedHtmlInfo {
 
   getCdnResources(content) {
     return [
-      ...(content.html.match(CDN_URL_REGEX) || []),
-      ...(content.css.match(CDN_URL_REGEX) || [])
+      ...content.html.match(CDN_URL_REGEX) || [],
+      ...content.css.match(CDN_URL_REGEX) || []
     ];
   }
 }
