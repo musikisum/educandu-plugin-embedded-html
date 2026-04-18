@@ -34,7 +34,10 @@ export default function EmbeddedHtmlDisplay({ content }) {
 
     const handleMessage = event => {
       if (event.source === iframe?.contentWindow && event.data?.iframeAutoResize) {
-        setAutoHeight(event.data.height);
+        const h = event.data.height;
+        if (typeof h === 'number' && Number.isFinite(h) && h > 0) {
+          setAutoHeight(h);
+        }
       }
     };
     window.addEventListener('message', handleMessage);
@@ -66,7 +69,7 @@ export default function EmbeddedHtmlDisplay({ content }) {
           ref={iframeRef}
           sandbox="allow-scripts"
           srcDoc={srcDoc}
-          style={{ height: `${autoHeight ?? height}px` }}
+          style={{ height: `${autoHeight ?? height ?? 600}px` }}
           />
       </div>
     </div>

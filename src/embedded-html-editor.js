@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Button, Collapse, Form, Input, InputNumber, Tabs, Upload } from 'antd';
-import { CheckCircleOutlined, CodeOutlined, UploadOutlined } from '@ant-design/icons';
+import { Alert, Button, Collapse, Form, Input, InputNumber, Select, Tabs, Upload } from 'antd';
+import { CheckCircleOutlined, CloseCircleOutlined, CodeOutlined, UploadOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import Info from '@educandu/educandu/components/info.js';
 import { FORM_ITEM_LAYOUT } from '@educandu/educandu/domain/constants.js';
 import { sectionEditorProps } from '@educandu/educandu/ui/default-prop-types.js';
 import ObjectWidthSlider from '@educandu/educandu/components/object-width-slider.js';
+import { extractBodyContent, fixScrollbarIssues, hasScrollbarIssues, stripLocalExternalTags } from './embedded-html-utils.js';
+import examples from './embedded-html-examples.js';
 
 const SIZE_WARNING_BYTES = 1_000_000;
 
@@ -16,25 +18,6 @@ function readFileAsText(file) {
     reader.onerror = reject;
     reader.readAsText(file, 'UTF-8');
   });
-}
-
-function extractBodyContent(html) {
-  const match = html.match(/<body[^>]*>([\s\S]*)<\/body>/i);
-  return match ? match[1].trim() : html;
-}
-
-function stripLocalExternalTags(html) {
-  return html
-    .replace(/<link[^>]+href=["'](?!https?:|\/\/|cdn:\/\/)([^"']+)["'][^>]*>\s*/gi, '')
-    .replace(/<script[^>]+src=["'](?!https?:|\/\/|cdn:\/\/)([^"']+)["'][^>]*><\/script>\s*/gi, '');
-}
-
-function hasScrollbarIssues(css) {
-  return /overflow(-[xy])?\s*:\s*(auto|scroll)/i.test(css);
-}
-
-function fixScrollbarIssues(css) {
-  return css.replace(/overflow(-[xy])?\s*:\s*(auto|scroll)/gi, (_, axis) => `overflow${axis || ''}: hidden`);
 }
 
 export default function EmbeddedHtmlEditor({ content, onContentChanged }) {
@@ -57,20 +40,32 @@ export default function EmbeddedHtmlEditor({ content, onContentChanged }) {
   const hasContent = !!content.html;
 
   const handleHtmlUpload = async file => {
-    const text = await readFileAsText(file);
-    const body = extractBodyContent(text);
-    const cleanedHtml = stripLocalExternalTags(body);
-    onContentChanged({ ...content, html: cleanedHtml });
+    try {
+      const text = await readFileAsText(file);
+      const body = extractBodyContent(text);
+      const cleanedHtml = stripLocalExternalTags(body);
+      onContentChanged({ ...content, html: cleanedHtml });
+    } catch {
+      // file could not be read — ignore silently, content unchanged
+    }
   };
 
   const handleCssUpload = async file => {
-    const text = await readFileAsText(file);
-    onContentChanged({ ...content, css: text, cssOriginal: null });
+    try {
+      const text = await readFileAsText(file);
+      onContentChanged({ ...content, css: text, cssOriginal: null });
+    } catch {
+      // file could not be read — ignore silently, content unchanged
+    }
   };
 
   const handleJsUpload = async file => {
-    const text = await readFileAsText(file);
-    onContentChanged({ ...content, js: text });
+    try {
+      const text = await readFileAsText(file);
+      onContentChanged({ ...content, js: text });
+    } catch {
+      // file could not be read — ignore silently, content unchanged
+    }
   };
 
   const handleFixScrollbars = () => {
@@ -86,6 +81,17 @@ export default function EmbeddedHtmlEditor({ content, onContentChanged }) {
   const handleJsChange = e => onContentChanged({ ...content, js: e.target.value });
   const handleWidthChange = value => onContentChanged({ ...content, width: value });
   const handleHeightChange = value => onContentChanged({ ...content, height: value });
+
+  const handleClear = () => {
+    onContentChanged({ ...content, html: '', css: '', cssOriginal: null, js: '' });
+  };
+
+  const handleLoadExample = key => {
+    const example = examples.find(e => e.key === key);
+    if (example) {
+      onContentChanged({ ...content, html: example.html, css: example.css, cssOriginal: null, js: example.js });
+    }
+  };
 
   const showScrollbarWarning = !!content.css && !content.cssOriginal && hasScrollbarIssues(content.css);
 
@@ -117,6 +123,23 @@ export default function EmbeddedHtmlEditor({ content, onContentChanged }) {
               <Button icon={<UploadOutlined />}>JS</Button>
             </Upload>
             {hasContent ? <CheckCircleOutlined className="EP_Musikisum_EmbeddedHtml_Editor-check" /> : null}
+            {hasContent
+              ? (
+                <Button
+                  size="small"
+                  icon={<CloseCircleOutlined />}
+                  onClick={handleClear}
+                  title={t('clearContent')}
+                  />
+              )
+              : null}
+            <Select
+              value={null}
+              placeholder={t('loadExample')}
+              className="EP_Musikisum_EmbeddedHtml_Editor-exampleSelect"
+              onChange={handleLoadExample}
+              options={examples.map(e => ({ value: e.key, label: t(`example_${e.key}`) }))}
+              />
           </div>
         </Form.Item>
 

@@ -39,6 +39,22 @@
     "heightInfo": {
       "en": "Display height of the iframe in pixels",
       "de": "Anzeigehöhe des iframes in Pixeln"
+    },
+    "clearContent": {
+      "en": "Remove content",
+      "de": "Inhalt entfernen"
+    },
+    "loadExample": {
+      "en": "Load example …",
+      "de": "Beispiel laden …"
+    },
+    "example_metronome": {
+      "en": "Metronome",
+      "de": "Metronom"
+    },
+    "example_intervals": {
+      "en": "Interval table",
+      "de": "Intervall-Tabelle"
     }
   }
 }

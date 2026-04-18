@@ -1,6 +1,6 @@
 import joi from 'joi';
 import React from 'react';
-import { CodeOutlined } from '@ant-design/icons';
+import EmbeddedHtmlIcon from './embedded-html-icon.js';
 import cloneDeep from '@educandu/educandu/utils/clone-deep.js';
 import { PLUGIN_GROUP } from '@educandu/educandu/domain/constants.js';
 import { couldAccessUrlFromRoom } from '@educandu/educandu/utils/source-utils.js';
@@ -17,11 +17,11 @@ class EmbeddedHtmlInfo {
   }
 
   getIcon() {
-    return <CodeOutlined />;
+    return <EmbeddedHtmlIcon />;
   }
 
   getGroups() {
-    return [PLUGIN_GROUP.mostUsed, PLUGIN_GROUP.other];
+    return [PLUGIN_GROUP.other];
   }
 
   async resolveDisplayComponent() {
