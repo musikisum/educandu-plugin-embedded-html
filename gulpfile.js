@@ -108,7 +108,7 @@ export function copyToDist() {
   return gulp.src(['src/**', '!src/**/*.{js,yml}'], { base: 'src' }).pipe(gulp.dest('dist'));
 }
 
-export const build = gulp.parallel(copyToDist, buildJs, buildTranslations);
+export const build = gulp.series(buildTranslations, gulp.parallel(copyToDist, buildJs));
 
 export async function buildTestAppCss() {
   await deleteAsync('test-app/dist/**/*.{css,css.br,css.gz,css.map,css.map.br,css.map.gz}');
