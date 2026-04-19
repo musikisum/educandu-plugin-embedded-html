@@ -193,171 +193,6 @@ slider.addEventListener('input', function() {
 });`
   },
   {
-    key: 'intervals',
-    html: `<div class="wrapper">
-  <h2>Intervall-Tabelle</h2>
-  <div class="scroll-box">
-    <table>
-      <thead>
-        <tr><th>Intervall</th><th>Halbtonschritte</th><th>Beispiel (ab C)</th><th>Charakter</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Prime</td><td>0</td><td>c – c</td><td>vollkommen konsonant, schließend</td></tr>
-        <tr><td>Kleine Sekunde</td><td>1</td><td>c – d♭</td><td>stark dissonant</td></tr>
-        <tr><td>Große Sekunde</td><td>2</td><td>c – d</td><td>leicht dissonant</td></tr>
-        <tr><td>Kleine Terz</td><td>3</td><td>c – e♭</td><td>unvollkommen konsonant</td></tr>
-        <tr><td>Große Terz</td><td>4</td><td>c – e</td><td>unvollkommen konsonant</td></tr>
-        <tr><td>Quarte</td><td>5</td><td>c – f</td><td>dissonant oder konsonant</td></tr>
-        <tr><td>Tritonus</td><td>6</td><td>C – f♯</td><td>dissonant</td></tr>
-        <tr><td>Quinte</td><td>7</td><td>c – g</td><td>vollkommen konsonant, öffnend</td></tr>
-        <tr><td>Kleine Sexte</td><td>8</td><td>c – a♭</td><td>unvollkommen konsonant</td></tr>
-        <tr><td>Große Sexte</td><td>9</td><td>c – a</td><td>unvollkommen konsonant</td></tr>
-        <tr><td>Kleine Septime</td><td>10</td><td>c – b♭</td><td>leicht dissonant</td></tr>
-        <tr><td>Große Septime</td><td>11</td><td>c – h</td><td>stark dissonant</td></tr>
-        <tr><td>Oktave</td><td>12</td><td>C – c</td><td>vollommen konsonant, schließend</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>`,
-    css: `* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-body {
-  font-family: sans-serif;
-  background: #f9f9f9;
-  padding: 24px 16px;
-  overflow: auto;
-}
-.wrapper {
-  max-width: 600px;
-  margin: 0 auto;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.1);
-  padding: 24px;
-}
-h2 {
-  margin-bottom: 16px;
-  color: #333;
-}
-.scroll-box {
-  overflow-x: auto;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 650px;
-}
-thead {
-  background: #f0f4ff;
-}
-th, td {
-  padding: 8px 12px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
-  font-size: 0.9rem;
-}
-th {
-  font-weight: 600;
-  color: #444;
-}
-tr:last-child td {
-  border-bottom: none;
-}
-tr:nth-child(even) {
-  background: #fafafa;
-}`,
-    js: `document.querySelectorAll('tbody tr').forEach(function(row) {
-  row.addEventListener('click', function() {
-    document.querySelectorAll('tbody tr').forEach(function(r) {
-      r.style.background = '';
-    });
-    row.style.background = '#e8f0fe';
-  });
-});`
-  },
-  {
-    key: 'infobox',
-    height: 400,
-    html: `<div class="cards">
-  <div class="card card--info">
-    <div class="card__icon">ℹ</div>
-    <div class="card__body">
-      <div class="card__title">Hinweis</div>
-      <div class="card__text">Der Quintenzirkel zeigt alle 12 Dur- und Molltonarten und ihre Verwandtschaft zueinander. Benachbarte Tonarten unterscheiden sich nur um ein Vorzeichen.</div>
-    </div>
-  </div>
-  <div class="card card--tip">
-    <div class="card__icon">✦</div>
-    <div class="card__body">
-      <div class="card__title">Tipp</div>
-      <div class="card__text">Paralleltonarten teilen dieselben Vorzeichen — z. B. C-Dur und a-Moll. Sie stehen sich im Quintenzirkel gegenüber.</div>
-    </div>
-  </div>
-  <div class="card card--warning">
-    <div class="card__icon">⚠</div>
-    <div class="card__body">
-      <div class="card__title">Achtung</div>
-      <div class="card__text">Nicht verwechseln: <em>Parallel</em>tonarten (gleiche Vorzeichen) und <em>Varianten</em>tonarten (gleicher Grundton, aber Dur/Moll).</div>
-    </div>
-  </div>
-</div>`,
-    css: `* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-body {
-  font-family: sans-serif;
-  padding: 24px 16px;
-}
-.cards {
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-}
-.card {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  width: 70%;
-  background: #fff;
-  border-radius: 8px;
-  border-left: 5px solid #ccc;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
-  padding: 16px 20px;
-}
-.card--info    { border-left-color: #3b82f6; margin-right: auto; }
-.card--tip     { border-left-color: #10b981; margin-left: auto; margin-right: auto; }
-.card--warning { border-left-color: #f59e0b; margin-left: auto; }
-.card__icon {
-  font-size: 1.4rem;
-  line-height: 1.3;
-  flex-shrink: 0;
-}
-.card--info    .card__icon { color: #3b82f6; }
-.card--tip     .card__icon { color: #10b981; }
-.card--warning .card__icon { color: #f59e0b; }
-.card__title {
-  font-weight: 700;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 5px;
-  color: #555;
-}
-.card__text {
-  font-size: 0.9rem;
-  color: #333;
-  line-height: 1.55;
-}`,
-    js: ''
-  },
-  {
     key: 'turntable',
     height: 380,
     html: `<div class="scene">
@@ -533,6 +368,7 @@ button {
   font-size: 0.85rem;
   cursor: pointer;
   letter-spacing: 0.05em;
+  width: 120px;
 }
 button:hover {
   background: #383838;
@@ -546,5 +382,170 @@ function toggle() {
   record.style.animationPlayState = playing ? 'running' : 'paused';
   btn.textContent = playing ? '⏸ Pause' : '▶ Play';
 }`
+  },
+  {
+    key: 'intervals',
+    html: `<div class="wrapper">
+  <h2>Intervall-Tabelle</h2>
+  <div class="scroll-box">
+    <table>
+      <thead>
+        <tr><th>Intervall</th><th>Halbtonschritte</th><th>Beispiel (ab C)</th><th>Charakter</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Prime</td><td>0</td><td>c – c</td><td>vollkommen konsonant, schließend</td></tr>
+        <tr><td>Kleine Sekunde</td><td>1</td><td>c – d♭</td><td>stark dissonant</td></tr>
+        <tr><td>Große Sekunde</td><td>2</td><td>c – d</td><td>leicht dissonant</td></tr>
+        <tr><td>Kleine Terz</td><td>3</td><td>c – e♭</td><td>unvollkommen konsonant</td></tr>
+        <tr><td>Große Terz</td><td>4</td><td>c – e</td><td>unvollkommen konsonant</td></tr>
+        <tr><td>Quarte</td><td>5</td><td>c – f</td><td>dissonant oder konsonant</td></tr>
+        <tr><td>Tritonus</td><td>6</td><td>C – f♯</td><td>dissonant</td></tr>
+        <tr><td>Quinte</td><td>7</td><td>c – g</td><td>vollkommen konsonant, öffnend</td></tr>
+        <tr><td>Kleine Sexte</td><td>8</td><td>c – a♭</td><td>unvollkommen konsonant</td></tr>
+        <tr><td>Große Sexte</td><td>9</td><td>c – a</td><td>unvollkommen konsonant</td></tr>
+        <tr><td>Kleine Septime</td><td>10</td><td>c – b♭</td><td>leicht dissonant</td></tr>
+        <tr><td>Große Septime</td><td>11</td><td>c – h</td><td>stark dissonant</td></tr>
+        <tr><td>Oktave</td><td>12</td><td>C – c</td><td>vollkommen konsonant, schließend</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>`,
+    css: `* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: sans-serif;
+  background: #f9f9f9;
+  padding: 24px 16px;
+  overflow: auto;
+}
+.wrapper {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+  padding: 24px;
+}
+h2 {
+  margin-bottom: 16px;
+  color: #333;
+}
+.scroll-box {
+  overflow-x: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 650px;
+}
+thead {
+  background: #f0f4ff;
+}
+th, td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  font-size: 0.9rem;
+}
+th {
+  font-weight: 600;
+  color: #444;
+}
+tr:last-child td {
+  border-bottom: none;
+}
+tr:nth-child(even) {
+  background: #fafafa;
+}`,
+    js: `document.querySelectorAll('tbody tr').forEach(function(row) {
+  row.addEventListener('click', function() {
+    document.querySelectorAll('tbody tr').forEach(function(r) {
+      r.style.background = '';
+    });
+    row.style.background = '#e8f0fe';
+  });
+});`
+  },
+  {
+    key: 'infobox',
+    height: 400,
+    html: `<div class="cards">
+  <div class="card card--info">
+    <div class="card__icon">ℹ</div>
+    <div class="card__body">
+      <div class="card__title">Hinweis</div>
+      <div class="card__text">Der Quintenzirkel zeigt alle 12 Dur- und Molltonarten, benachbarte Tonarten unterscheiden sich nur um ein Vorzeichen.</div>
+    </div>
+  </div>
+  <div class="card card--tip">
+    <div class="card__icon">✦</div>
+    <div class="card__body">
+      <div class="card__title">Tipp</div>
+      <div class="card__text">Nicht verwechseln: <em>Parallel</em>tonarten (gleiche Vorzeichen) und <em>Variant</em>tonarten (gleicher Grundton, aber Dur/Moll).</div>
+    </div>
+  </div>
+  <div class="card card--warning">
+    <div class="card__icon">⚠</div>
+    <div class="card__body">
+      <div class="card__title">Achtung</div>
+      <div class="card__text">Dieses Plugin erlaubt für erfahrene User Änderungen im Layout, die gegen die Compliance-Regeln der Plattform verstoßen. <a href="https://openmusic.academy/docs/LZSSz6XryGLSGXJukhh6Lh/" target="_blank" rel="noopener">Bitte informiere dich!</a></div>
+    </div>
+  </div>
+</div>`,
+    css: `* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: sans-serif;
+  padding: 24px 16px;
+}
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  width: 70%;
+  background: #fff;
+  border-radius: 8px;
+  border-left: 5px solid #ccc;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  padding: 16px 20px;
+}
+.card--info    { border-left-color: #3b82f6; margin-right: auto; }
+.card--tip     { border-left-color: #10b981; margin-left: auto; margin-right: auto; }
+.card--warning { border-left-color: #f59e0b; margin-left: auto; }
+.card__icon {
+  font-size: 1.4rem;
+  line-height: 1.3;
+  flex-shrink: 0;
+}
+.card--info    .card__icon { color: #3b82f6; }
+.card--tip     .card__icon { color: #10b981; }
+.card--warning .card__icon { color: #f59e0b; }
+.card__title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 5px;
+  color: #555;
+}
+.card__text {
+  font-size: 0.9rem;
+  color: #333;
+  line-height: 1.55;
+}`,
+    js: ''
   }
 ];

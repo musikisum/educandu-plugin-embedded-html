@@ -23,6 +23,7 @@ function readFileAsText(file) {
 export default function EmbeddedHtmlEditor({ content, onContentChanged }) {
   const { t } = useTranslation('musikisum/educandu-plugin-embedded-html');
   const [previewSrcDoc, setPreviewSrcDoc] = useState(null);
+  const [selectedExampleKey, setSelectedExampleKey] = useState(null);
 
   useEffect(() => {
     if (!content.html && !content.css) {
@@ -97,6 +98,7 @@ export default function EmbeddedHtmlEditor({ content, onContentChanged }) {
         update.height = example.height;
       }
       onContentChanged(update);
+      setSelectedExampleKey(key);
     }
   };
 
@@ -141,7 +143,7 @@ export default function EmbeddedHtmlEditor({ content, onContentChanged }) {
               )
               : null}
             <Select
-              value={null}
+              value={selectedExampleKey}
               placeholder={t('loadExample')}
               className="EP_Musikisum_EmbeddedHtml_Editor-exampleSelect"
               onChange={handleLoadExample}
@@ -251,7 +253,7 @@ export default function EmbeddedHtmlEditor({ content, onContentChanged }) {
                   {!!previewSrcDoc && (
                     <div className="EP_Musikisum_EmbeddedHtml_Editor-previewWrapper">
                       <iframe
-                        sandbox="allow-scripts"
+                        sandbox="allow-scripts allow-popups"
                         srcDoc={previewSrcDoc}
                         className="EP_Musikisum_EmbeddedHtml_Editor-previewIframe"
                         />
