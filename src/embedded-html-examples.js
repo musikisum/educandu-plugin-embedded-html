@@ -1,6 +1,7 @@
 export default [
   {
     key: 'metronome',
+    height: 500,
     html: `<div class="metronome">
   <h2>Metronom</h2>
   <div class="display">
@@ -201,19 +202,19 @@ slider.addEventListener('input', function() {
         <tr><th>Intervall</th><th>Halbtonschritte</th><th>Beispiel (ab C)</th><th>Charakter</th></tr>
       </thead>
       <tbody>
-        <tr><td>Prime</td><td>0</td><td>C – C</td><td>neutral</td></tr>
-        <tr><td>Kleine Sekunde</td><td>1</td><td>C – Des</td><td>dissonant</td></tr>
-        <tr><td>Große Sekunde</td><td>2</td><td>C – D</td><td>leicht dissonant</td></tr>
-        <tr><td>Kleine Terz</td><td>3</td><td>C – Es</td><td>konsonant, dunkel</td></tr>
-        <tr><td>Große Terz</td><td>4</td><td>C – E</td><td>konsonant, hell</td></tr>
-        <tr><td>Quarte</td><td>5</td><td>C – F</td><td>konsonant</td></tr>
-        <tr><td>Tritonus</td><td>6</td><td>C – Ges</td><td>stark dissonant</td></tr>
-        <tr><td>Quinte</td><td>7</td><td>C – G</td><td>konsonant, offen</td></tr>
-        <tr><td>Kleine Sexte</td><td>8</td><td>C – As</td><td>konsonant, weich</td></tr>
-        <tr><td>Große Sexte</td><td>9</td><td>C – A</td><td>konsonant, hell</td></tr>
-        <tr><td>Kleine Septime</td><td>10</td><td>C – B</td><td>dissonant</td></tr>
-        <tr><td>Große Septime</td><td>11</td><td>C – H</td><td>stark dissonant</td></tr>
-        <tr><td>Oktave</td><td>12</td><td>C – C'</td><td>konsonant, vollkommen</td></tr>
+        <tr><td>Prime</td><td>0</td><td>c – c</td><td>vollkommen konsonant, schließend</td></tr>
+        <tr><td>Kleine Sekunde</td><td>1</td><td>c – d♭</td><td>stark dissonant</td></tr>
+        <tr><td>Große Sekunde</td><td>2</td><td>c – d</td><td>leicht dissonant</td></tr>
+        <tr><td>Kleine Terz</td><td>3</td><td>c – e♭</td><td>unvollkommen konsonant</td></tr>
+        <tr><td>Große Terz</td><td>4</td><td>c – e</td><td>unvollkommen konsonant</td></tr>
+        <tr><td>Quarte</td><td>5</td><td>c – f</td><td>dissonant oder konsonant</td></tr>
+        <tr><td>Tritonus</td><td>6</td><td>C – f♯</td><td>dissonant</td></tr>
+        <tr><td>Quinte</td><td>7</td><td>c – g</td><td>vollkommen konsonant, öffnend</td></tr>
+        <tr><td>Kleine Sexte</td><td>8</td><td>c – a♭</td><td>unvollkommen konsonant</td></tr>
+        <tr><td>Große Sexte</td><td>9</td><td>c – a</td><td>unvollkommen konsonant</td></tr>
+        <tr><td>Kleine Septime</td><td>10</td><td>c – b♭</td><td>leicht dissonant</td></tr>
+        <tr><td>Große Septime</td><td>11</td><td>c – h</td><td>stark dissonant</td></tr>
+        <tr><td>Oktave</td><td>12</td><td>C – c</td><td>vollommen konsonant, schließend</td></tr>
       </tbody>
     </table>
   </div>
@@ -249,7 +250,7 @@ h2 {
 table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 500px;
+  min-width: 650px;
 }
 thead {
   background: #f0f4ff;
@@ -278,5 +279,272 @@ tr:nth-child(even) {
     row.style.background = '#e8f0fe';
   });
 });`
+  },
+  {
+    key: 'infobox',
+    height: 400,
+    html: `<div class="cards">
+  <div class="card card--info">
+    <div class="card__icon">ℹ</div>
+    <div class="card__body">
+      <div class="card__title">Hinweis</div>
+      <div class="card__text">Der Quintenzirkel zeigt alle 12 Dur- und Molltonarten und ihre Verwandtschaft zueinander. Benachbarte Tonarten unterscheiden sich nur um ein Vorzeichen.</div>
+    </div>
+  </div>
+  <div class="card card--tip">
+    <div class="card__icon">✦</div>
+    <div class="card__body">
+      <div class="card__title">Tipp</div>
+      <div class="card__text">Paralleltonarten teilen dieselben Vorzeichen — z. B. C-Dur und a-Moll. Sie stehen sich im Quintenzirkel gegenüber.</div>
+    </div>
+  </div>
+  <div class="card card--warning">
+    <div class="card__icon">⚠</div>
+    <div class="card__body">
+      <div class="card__title">Achtung</div>
+      <div class="card__text">Nicht verwechseln: <em>Parallel</em>tonarten (gleiche Vorzeichen) und <em>Varianten</em>tonarten (gleicher Grundton, aber Dur/Moll).</div>
+    </div>
+  </div>
+</div>`,
+    css: `* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: sans-serif;
+  padding: 24px 16px;
+}
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  width: 70%;
+  background: #fff;
+  border-radius: 8px;
+  border-left: 5px solid #ccc;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  padding: 16px 20px;
+}
+.card--info    { border-left-color: #3b82f6; margin-right: auto; }
+.card--tip     { border-left-color: #10b981; margin-left: auto; margin-right: auto; }
+.card--warning { border-left-color: #f59e0b; margin-left: auto; }
+.card__icon {
+  font-size: 1.4rem;
+  line-height: 1.3;
+  flex-shrink: 0;
+}
+.card--info    .card__icon { color: #3b82f6; }
+.card--tip     .card__icon { color: #10b981; }
+.card--warning .card__icon { color: #f59e0b; }
+.card__title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 5px;
+  color: #555;
+}
+.card__text {
+  font-size: 0.9rem;
+  color: #333;
+  line-height: 1.55;
+}`,
+    js: ''
+  },
+  {
+    key: 'turntable',
+    height: 380,
+    html: `<div class="scene">
+  <div class="turntable">
+    <div class="platter">
+      <div class="record" id="record">
+        <div class="label">
+          <span class="label-text">OMA</span>
+          <div class="hole"></div>
+        </div>
+      </div>
+    </div>
+    <div class="arm-pivot">
+      <div class="arm">
+        <div class="head">
+          <div class="stylus"></div>
+        </div>
+      </div>
+    </div>
+    <div class="knobs">
+      <div class="knob"></div>
+      <div class="knob"></div>
+      <div class="knob"></div>
+    </div>
+  </div>
+  <button id="btn" onclick="toggle()">⏸ Pause</button>
+</div>`,
+    css: `* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 16px;
+  gap: 20px;
+}
+.turntable {
+  position: relative;
+  width: 360px;
+  height: 240px;
+  background: linear-gradient(160deg, #c8b89a, #a8916a);
+  border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.25);
+}
+.platter {
+  position: absolute;
+  width: 196px;
+  height: 196px;
+  background: #2c2c2c;
+  border-radius: 50%;
+  top: 50%;
+  left: 118px;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 5px #383838, 0 4px 16px rgba(0,0,0,0.7);
+}
+.record {
+  position: absolute;
+  width: 178px;
+  height: 178px;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: repeating-radial-gradient(circle, #0a0a0a 0, #161616 1px, #0a0a0a 2px, #0a0a0a 5px);
+  animation: spin 1.8s linear infinite;
+}
+@keyframes spin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+.label {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  background: radial-gradient(circle at 40% 40%, #e05a4a, #8b1a0e);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.label-text {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.85);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+.hole {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  background: #2c2c2c;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.arm-pivot {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: radial-gradient(circle at 40% 35%, #ccc, #888);
+  border-radius: 50%;
+  top: 34px;
+  right: 48px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  z-index: 2;
+}
+.arm {
+  position: absolute;
+  width: 5px;
+  height: 120px;
+  background: linear-gradient(to right, #bbb, #999, #bbb);
+  border-radius: 3px 3px 2px 2px;
+  top: 7px;
+  left: 50%;
+  transform: translateX(-50%) rotate(72deg);
+  transform-origin: top center;
+}
+.head {
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 13px;
+  height: 9px;
+  background: #aaa;
+  border-radius: 2px;
+}
+.stylus {
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 7px;
+  background: #ddd;
+  border-radius: 0 0 1px 1px;
+}
+.knobs {
+  position: absolute;
+  bottom: 20px;
+  right: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.knob {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #e0e0e0, #888);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3);
+}
+button {
+  margin-top: 16px;
+  background: #2a2a2a;
+  color: #ddd;
+  border: 1px solid #444;
+  border-radius: 20px;
+  padding: 7px 28px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+}
+button:hover {
+  background: #383838;
+}`,
+    js: `var playing = true;
+var record = document.getElementById('record');
+var btn = document.getElementById('btn');
+
+function toggle() {
+  playing = !playing;
+  record.style.animationPlayState = playing ? 'running' : 'paused';
+  btn.textContent = playing ? '⏸ Pause' : '▶ Play';
+}`
   }
 ];

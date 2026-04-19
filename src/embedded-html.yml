@@ -41,3 +41,9 @@ musikisum/educandu-plugin-embedded-html:
   example_intervals:
     en: Interval table
     de: Intervall-Tabelle
+  example_infobox:
+    en: Info cards
+    de: Info-Karten
+  example_turntable:
+    en: Turntable
+    de: Plattenspieler

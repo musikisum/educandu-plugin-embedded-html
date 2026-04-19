@@ -26,6 +26,7 @@ export default function EmbeddedHtmlEditor({ content, onContentChanged }) {
 
   useEffect(() => {
     if (!content.html && !content.css) {
+      setPreviewSrcDoc(null);
       return () => {};
     }
     const timer = setTimeout(() => {
@@ -89,7 +90,11 @@ export default function EmbeddedHtmlEditor({ content, onContentChanged }) {
   const handleLoadExample = key => {
     const example = examples.find(e => e.key === key);
     if (example) {
-      onContentChanged({ ...content, html: example.html, css: example.css, cssOriginal: null, js: example.js });
+      const update = { ...content, html: example.html, css: example.css, cssOriginal: null, js: example.js };
+      if (example.height) {
+        update.height = example.height;
+      }
+      onContentChanged(update);
     }
   };
 
