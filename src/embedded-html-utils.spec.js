@@ -1,5 +1,71 @@
 import { describe, expect, it } from 'vitest';
-import { extractBodyContent, fixScrollbarIssues, hasScrollbarIssues, stripLocalExternalTags } from './embedded-html-utils.js';
+import { extractBodyContent, extractInlineScripts, extractStyles, fixScrollbarIssues, hasScrollbarIssues, stripExtractedTags, stripLocalExternalTags } from './embedded-html-utils.js';
+
+describe('extractStyles', () => {
+  it('should extract content from a single style tag', () => {
+    expect(extractStyles('<style>body { color: red; }</style>')).toBe('body { color: red; }');
+  });
+
+  it('should extract and join multiple style tags', () => {
+    expect(extractStyles('<style>a { color: red; }</style><style>b { color: blue; }</style>')).toBe('a { color: red; }\nb { color: blue; }');
+  });
+
+  it('should extract styles from head and body', () => {
+    const html = '<html><head><style>h1 { font-size: 2rem; }</style></head><body><style>p { margin: 0; }</style></body></html>';
+    expect(extractStyles(html)).toBe('h1 { font-size: 2rem; }\np { margin: 0; }');
+  });
+
+  it('should return empty string when no style tags are present', () => {
+    expect(extractStyles('<p>Hello</p>')).toBe('');
+  });
+
+  it('should ignore empty style tags', () => {
+    expect(extractStyles('<style>  </style><style>body { color: red; }</style>')).toBe('body { color: red; }');
+  });
+});
+
+describe('extractInlineScripts', () => {
+  it('should extract content from an inline script tag', () => {
+    expect(extractInlineScripts('<script>console.log(1);</script>')).toBe('console.log(1);');
+  });
+
+  it('should extract and join multiple inline script tags', () => {
+    expect(extractInlineScripts('<script>var a = 1;</script><script>var b = 2;</script>')).toBe('var a = 1;\nvar b = 2;');
+  });
+
+  it('should not extract scripts with a src attribute', () => {
+    expect(extractInlineScripts('<script src="https://example.com/lib.js"></script>')).toBe('');
+  });
+
+  it('should extract inline scripts but skip external ones', () => {
+    const html = '<script src="https://cdn.com/lib.js"></script><script>var x = 1;</script>';
+    expect(extractInlineScripts(html)).toBe('var x = 1;');
+  });
+
+  it('should return empty string when no inline scripts are present', () => {
+    expect(extractInlineScripts('<p>Hello</p>')).toBe('');
+  });
+});
+
+describe('stripExtractedTags', () => {
+  it('should remove style tags', () => {
+    expect(stripExtractedTags('<style>body { color: red; }</style><p>Hello</p>')).toBe('<p>Hello</p>');
+  });
+
+  it('should remove inline script tags', () => {
+    expect(stripExtractedTags('<p>Hello</p><script>var x = 1;</script>')).toBe('<p>Hello</p>');
+  });
+
+  it('should keep script tags with src attribute', () => {
+    const tag = '<script src="https://example.com/lib.js"></script>';
+    expect(stripExtractedTags(tag)).toBe(tag);
+  });
+
+  it('should remove both style and inline script tags', () => {
+    const input = '<style>body{}</style><p>Hello</p><script>var x=1;</script>';
+    expect(stripExtractedTags(input)).toBe('<p>Hello</p>');
+  });
+});
 
 describe('extractBodyContent', () => {
   it('should extract content between body tags', () => {

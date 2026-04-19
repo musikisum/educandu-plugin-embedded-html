@@ -6,7 +6,7 @@ import Info from '@educandu/educandu/components/info.js';
 import { FORM_ITEM_LAYOUT } from '@educandu/educandu/domain/constants.js';
 import { sectionEditorProps } from '@educandu/educandu/ui/default-prop-types.js';
 import ObjectWidthSlider from '@educandu/educandu/components/object-width-slider.js';
-import { extractBodyContent, fixScrollbarIssues, hasScrollbarIssues, stripLocalExternalTags } from './embedded-html-utils.js';
+import { extractBodyContent, extractInlineScripts, extractStyles, fixScrollbarIssues, hasScrollbarIssues, stripExtractedTags, stripLocalExternalTags } from './embedded-html-utils.js';
 import examples from './embedded-html-examples.js';
 
 const SIZE_WARNING_BYTES = 1_000_000;
@@ -43,9 +43,11 @@ export default function EmbeddedHtmlEditor({ content, onContentChanged }) {
   const handleHtmlUpload = async file => {
     try {
       const text = await readFileAsText(file);
+      const css = extractStyles(text);
+      const js = extractInlineScripts(text);
       const body = extractBodyContent(text);
-      const cleanedHtml = stripLocalExternalTags(body);
-      onContentChanged({ ...content, html: cleanedHtml });
+      const html = stripExtractedTags(stripLocalExternalTags(body));
+      onContentChanged({ ...content, html, css, cssOriginal: null, js });
     } catch {
       // file could not be read — ignore silently, content unchanged
     }
