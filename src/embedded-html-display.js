@@ -67,7 +67,7 @@ export default function EmbeddedHtmlDisplay({ content }) {
       <div className={`u-horizontally-centered u-width-${width}`}>
         <iframe
           ref={iframeRef}
-          sandbox="allow-scripts allow-popups"
+          sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
           srcDoc={srcDoc}
           style={{ height: `${autoHeight ?? height ?? 600}px` }}
           />

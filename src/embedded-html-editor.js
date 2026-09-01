@@ -253,7 +253,7 @@ export default function EmbeddedHtmlEditor({ content, onContentChanged }) {
                   {!!previewSrcDoc && (
                     <div className="EP_Musikisum_EmbeddedHtml_Editor-previewWrapper">
                       <iframe
-                        sandbox="allow-scripts allow-popups"
+                        sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
                         srcDoc={previewSrcDoc}
                         className="EP_Musikisum_EmbeddedHtml_Editor-previewIframe"
                         />
