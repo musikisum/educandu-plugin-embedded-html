@@ -1,6 +1,6 @@
 {
   "name": "@musikisum/educandu-plugin-embedded-html",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "An embedded HTML plugin for educandu",
   "type": "module",
   "exports": {

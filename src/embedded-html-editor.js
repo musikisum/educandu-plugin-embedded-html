@@ -254,7 +254,7 @@ export default function EmbeddedHtmlEditor({ content, onContentChanged }) {
                     <div className="EP_Musikisum_EmbeddedHtml_Editor-previewWrapper">
                       <iframe
                         sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-downloads"
-                        allow="microphone; autoplay" // ignored by chrome and egde browsers
+                        allow="microphone; autoplay" // microphone still blocked: sandboxed srcDoc has a null origin (see CLAUDE.md)
                         srcDoc={previewSrcDoc}
                         className="EP_Musikisum_EmbeddedHtml_Editor-previewIframe"
                         />

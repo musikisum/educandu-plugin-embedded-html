@@ -55,6 +55,18 @@ getCdnResources(content) {
 - `sandbox="allow-scripts"` ohne `allow-same-origin`
 - Moderation: Vertrauen auf Community, keine Redaktions-Freigabe
 
+## Sandbox-Befund (getestet in Chromium, Sept. 2026)
+- iframe nutzt srcDoc + sandbox ohne allow-same-origin → Herkunft ist "null".
+- Downloads funktionieren nur mit `allow-downloads` (seit v1.2.2 gesetzt).
+- getUserMedia (Mikrofon) scheitert trotz allow="microphone" mit
+  "SecurityError: Invalid security origin". Das ist bei srcDoc nicht lösbar:
+  allow-same-origin würde der Seite die Herkunft openmusic.academy geben
+  und damit ein Sicherheitsloch öffnen.
+- Mikrofon nur möglich über eine eigene Domain (iframe src + allow="microphone")
+  oder als echtes educandu-Plugin ohne iframe.
+- Workaround im Embed: <input type="file" accept="audio/*" capture>
+  (auf Mobilgeräten öffnet sich die Aufnahme-App).
+
 ## Zugriff
 Jeder angemeldete User darf das Plugin anlegen.
 

@@ -68,7 +68,7 @@ export default function EmbeddedHtmlDisplay({ content }) {
         <iframe
           ref={iframeRef}
           sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-downloads"
-          allow="microphone; autoplay" // ignored by chrome and egde browsers
+          allow="microphone; autoplay" // microphone still blocked: sandboxed srcDoc has a null origin (see CLAUDE.md)
           srcDoc={srcDoc}
           style={{ height: `${autoHeight ?? height ?? 600}px` }}
           />
