@@ -253,7 +253,8 @@ export default function EmbeddedHtmlEditor({ content, onContentChanged }) {
                   {!!previewSrcDoc && (
                     <div className="EP_Musikisum_EmbeddedHtml_Editor-previewWrapper">
                       <iframe
-                        sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
+                        sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-downloads"
+                        allow="microphone; autoplay" // ignored by chrome and egde browsers
                         srcDoc={previewSrcDoc}
                         className="EP_Musikisum_EmbeddedHtml_Editor-previewIframe"
                         />

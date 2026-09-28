@@ -67,7 +67,8 @@ export default function EmbeddedHtmlDisplay({ content }) {
       <div className={`u-horizontally-centered u-width-${width}`}>
         <iframe
           ref={iframeRef}
-          sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
+          sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-downloads"
+          allow="microphone; autoplay" // ignored by chrome and egde browsers
           srcDoc={srcDoc}
           style={{ height: `${autoHeight ?? height ?? 600}px` }}
           />
